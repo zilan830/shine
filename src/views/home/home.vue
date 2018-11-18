@@ -3,34 +3,58 @@
     <div class="header-container">
         <div class="left-container">
             <div class="img-container">
-                {{avatar}}
+                头像
             </div>
         </div>
         <div class="right-container">
             <p>{{name}}</p>
-            <p>{{`${department}-${position}`}}</p>
+            <!-- <p>{{`${department}-${position}`}}</p> -->
         </div>
     </div>
     <div class="item-container">
         <div class="item-header">
-            <span class="item-text">应用</span>
-            <span class="item-link">更多<i></i></span>
+            <div class="item">
+                <span class="reatangle"></span>
+                <span class="item-text">应用</span>
+            </div>
+            <div class="item" @click="handleMore(1)">
+                <i class="iconfont icon-more"></i>
+                <span class="item-text">更多</span>
+            </div>
         </div>
-        <div class="">
-
-        </div>
-    </div>
-    <div>
-        <ul>
-            <li>
-                news
+        <ul class="apply-container">
+            <li class="apply-item" @click="handleApply('/leave')">
+                <i class="iconfont icon-leave"></i>
+                <p class="apply-name">请 假</p>
             </li>
         </ul>
+    </div>
+    <div class="item-container">
+        <div class="item-header">
+            <div class="item">
+                <span class="reatangle"></span>
+                <span class="item-text">消息</span>
+            </div>
+            <div class="item" @click="handleMore(2)">
+                <i class="iconfont icon-news"></i>
+                <span class="item-text">更多</span>
+            </div>
+        </div>
+        <div class="news-container" v-if="newsList.length > 0">
+            <hx-cell
+            v-for="(item,index) in newsList"
+            :key="index"
+            :option="item.option"
+            v-on="{click:()=>handleItemClick(item.type)}"></hx-cell>
+            <div v-if="newsList.length === 0" class="empty-tips">暂无请假信息</div>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'home',
   data() {
@@ -40,6 +64,56 @@ export default {
       department: '移动平台',
       position: '组员',
     };
+  },
+  mounted() {
+    this.getUserInfo();
+    this.getNews();
+  },
+  methods: {
+    handleApply(router) {
+      this.$router.push(router);
+    },
+    getUserInfo() {
+      const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+      this.name = userInfo.userName;
+    },
+    handleItemClick(type) {
+      this.$router.push({ path: '/leave', query: { type: type === 'flow' ? '待处理' : '已办结' } });
+    },
+    handleMore(index) {
+      switch (index) {
+        case 1:
+          this.$router.push('/apply');
+          break;
+        case 2:
+          this.$router.push('/news');
+          break;
+        default:
+          break;
+      }
+    },
+    ...mapActions(['getNews']),
+  },
+  computed: {
+    ...mapState({
+      newsList: (state) => {
+        const { news } = state.apis;
+        let dataLists = [];
+        if (news.length > 0) {
+          dataLists = news.map((item, index) => {
+            const obj = {};
+            obj.option = {
+              name: item.title,
+              value: '',
+              arrowIcon: 'left',
+            };
+            obj.type = item.type;
+            return obj;
+          });
+        }
+        return dataLists;
+      },
+    }),
   },
 };
 </script>
@@ -58,8 +132,6 @@ export default {
         height: 100px;
         background-color: $color-orange;
 
-        // background: linear-gradient(to right,white $color-orange)
-        // background: linear-gradient(to right, #F9BC82, $color-orange);
         .left-container {
             width: 100px;
             display: flex;
@@ -93,26 +165,62 @@ export default {
 
         .item-header {
             height: 30px;
-            padding: 0 20px;
+            padding: 0 15px;
             border-bottom: 1px solid $color-light-grey-opacity;
             display: flex;
             justify-content: space-between;
-            align-item: center;
+            font-size: 14px;
 
-            >span {
+            .item {
+                flex: 1;
+                display: flex;
                 line-height: 30px;
-                position: relative;
+                align-items: center;
 
-                &:first-child {
-                    &:after {
-                        left: -10px;
-                        content: '';
-                        position: absolute;
-                        width: 5px;
-                        height: 18px;
-                        background-color: $color-orange;
-                        top: 5px;
-                    }
+                &:last-child {
+                    flex-direction: row-reverse;
+                }
+
+                .reatangle {
+                    width: 5px;
+                    height: 16px;
+                    background-color: $color-orange;
+                }
+
+                .item-text {
+                    margin: 0 5px;
+                }
+            }
+        }
+
+        .apply-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px 15px;
+
+            .apply-item {
+                height: auto;
+                width: 25%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                // background-color: $color-orange;
+                border-radius: 5px;
+
+                >i {
+                    font-size: 40px;
+                    color: $color-orange;
+                }
+
+                &:active {
+                    transition: all 0.3s;
+                    background-color: $color-light-grey-opacity;
+                }
+
+                .apply-name {
+                    font-size: 14px;
+                    letter-spacing: 10px;
                 }
             }
         }

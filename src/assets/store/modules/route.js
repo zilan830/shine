@@ -4,8 +4,8 @@
 const router = {
   state: {
     style: 'in', // 设定初始方向：向前
-    routerIndex: 10,
-    name: '消息',
+    // routerIndex: 10,
+    // name: '消息',
   },
   mutations: {
     transitionStyle(state, payload) {

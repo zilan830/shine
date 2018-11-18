@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: 'h-layout',
+  name: 'hx-date-range',
   data() {
     return {};
   },

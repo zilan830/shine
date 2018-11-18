@@ -1,44 +1,19 @@
 <template>
-  <!-- <h-layout>
-    <hx-header slot="header" :left-options="{showBack}">
-      {{tabColumn.selectedLabelDefault}}
-    </hx-header>
-    <transition slot="content" :name="`vux-pop-${style}`">
-          <keep-alive>
-              <router-view class="router-view"></router-view>
-          </keep-alive>
-    </transition>
-      <hx-tarbar slot="footer" :tab-column="tabColumn"></hx-tarbar>
-  </h-layout> -->
-  <!-- <div class="hx-layout-container">
-        <div class="hx-layout-header">
-            <hx-header :left-options="{showBack}">
-              {{tabColumn.selectedLabelDefault}}
-            </hx-header>
-        </div>
-        <main class="hx-layout-content">
-            <transition :name="`vux-pop-${style}`">
-              <keep-alive>
-                <router-view class="router-view"></router-view>
-              </keep-alive>
-            </transition>
-        </main>
-        <div class="hx-layout-footer">
-            <hx-tarbar :tab-column="tabColumn"></hx-tarbar>
-        </div>
-    </div> -->
     <div class="wrapperContainer">
-        <hx-header v-if="headerName !== '首页'" :left-options="{showBack}">
+      <!-- <transition :name="`vux-pop-${style}`"> -->
+        <hx-header
+        v-if="headerName !== '首页'"
+        @on-click-back="handlerBack()"
+        :left-options="{showBack :isShowBack,preventGoBack:true}">
           {{headerName}}
         </hx-header>
+      <!-- </transition> -->
         <main class="content">
-            <transition :name="`vux-pop-${style}`">
-                <keep-alive>
-                    <router-view class="router-view" style="padding-bottom: 60px"/>
-                </keep-alive>
+            <transition :name="`fold-pop-${style}`">
+                <router-view class="router-view"/>
             </transition>
         </main>
-        <footer class="footerContainer">
+        <footer v-show="!isShowBack" class="footerContainer">
             <hx-tarbar :tab-column="tabColumn"></hx-tarbar>
         </footer>
     </div>
@@ -49,18 +24,13 @@
 import { mapState, mapActions } from 'vuex';
 import _ from 'lodash';
 import Menus from '../assets/common/menus';
-// import HLayout from '../components/layout.vue';
 
 export default {
   name: 'index',
-  components: {
-    // HLayout,
-  },
   data() {
     return {
       tabColumn: _.cloneDeep(Menus.tabColumn),
       headerName: '',
-      showBack: false,
       menu: _.cloneDeep(Menus.menuList),
     };
   },
@@ -69,6 +39,10 @@ export default {
     ...mapState({
       style: state => state.route.style,
     }),
+    isShowBack() {
+      const { index } = this.$route.meta;
+      return index.toString().length > 2;
+    },
   },
   watch: {
     $route(to, from) {
@@ -76,15 +50,29 @@ export default {
         fromIndex: from.meta.index,
         toIndex: to.meta.index,
       });
-      // debugger;
       this.changeHeaderName(to.meta.index);
+      // this.jumpLogin();
     },
   },
   mounted() {
     this.changeHeaderName(this.$route.meta.index);
+    // this.jumpLogin();
   },
   methods: {
     ...mapActions(['transitionStyle']),
+    handlerBack() {
+      switch (this.$route.name) {
+        case 'nextapprove':
+          this.$router.push('/leave');
+          break;
+        case 'leave':
+          this.$router.push('/apply');
+          break;
+        default:
+          this.$router.back();
+          break;
+      }
+    },
     changeHeaderName(index) {
       // 尾递归查找对应index并给名字
       let stack = [];
@@ -96,10 +84,19 @@ export default {
         item = stack.shift();
         if (item && item.index === index) {
           this.headerName = item.label;
+          this.tabColumn.selectedLabelDefault = item.label;
         }
         if (item.children && item.children.length) {
           stack = stack.concat(item.children);
         }
+      }
+    },
+    jumpLogin() {
+      // 获取本地用户信息
+      const loginUser = window.localStorage.getItem('userInfo');
+      // 若没有 则跳转到登录页
+      if (!loginUser) {
+        this.$router.push('/');
       }
     },
   },
@@ -107,45 +104,45 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-.vux-pop-out-enter-active,
-.vux-pop-out-leave-active,
-.vux-pop-in-enter-active,
-.vux-pop-in-leave-active {
+.fold-pop-out-enter-active,
+.fold-pop-out-leave-active,
+.fold-pop-in-enter-active,
+.fold-pop-in-leave-active {
   overflow: hidden;
   will-change: transform;
   transition: all 300ms;
-  height: 100%;
+  // height: 100%;
   position: absolute;
   backface-visibility: hidden;
   perspective: 1000;
 }
 
-.vux-pop-out-enter {
+.fold-pop-out-enter {
   overflow: hidden;
   opacity: 0;
   transform: translate3d(-100%, 0, 0);
 }
 
-.vux-pop-out-leave-active {
+.fold-pop-out-leave-active {
   overflow: hidden;
   opacity: 0;
   transform: translate3d(100%, 0, 0);
 }
 
-.vux-pop-in-enter {
+.fold-pop-in-enter {
   overflow: hidden;
   opacity: 0;
   transform: translate3d(100%, 0, 0);
 }
 
-.vux-pop-in-leave-active {
+.fold-pop-in-leave-active {
   overflow: hidden;
   opacity: 0;
   transform: translate3d(-100%, 0, 0);
 }
 
 .router-view {
-  height: 100%;
+  // height: 100%;
 }
 
 .hx-layout-container {
@@ -161,20 +158,22 @@ export default {
   }
 }
 
-.wrapperContainer{
+.wrapperContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  //固定内容框
+
+  // 固定内容框
   .content {
     flex: 1;
     overflow: auto;
+    background-color: $background-color;
   }
 }
 
 .router-view {
   width: 100%;
-  //top: 46px;
+  // top: 46px;
 }
 </style>
