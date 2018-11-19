@@ -3,6 +3,7 @@ module.exports = {
 
   devServer: {
     port: 9990,
+    assetsPublicPath: '/',
     // public: 'http://192.168.3.142:9990/',
     // proxy: {
     //   '/*': {
