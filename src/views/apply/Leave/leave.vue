@@ -303,7 +303,7 @@ export default {
           obj.option = {
             name: item.flowSummary,
             value: '',
-            arrowIcon: 'iconfont icon-input',
+            arrowIcon: 'left',
           };
           return obj;
         });
@@ -323,7 +323,7 @@ export default {
           obj.option = {
             name: item.flowSummary,
             value: '',
-            arrowIcon: 'iconfont icon-input',
+            arrowIcon: 'left',
           };
           return obj;
         });
@@ -343,7 +343,7 @@ export default {
           obj.option = {
             name: item.flowSummary,
             value: '',
-            arrowIcon: 'iconfont icon-input',
+            arrowIcon: 'left',
           };
           return obj;
         });
@@ -363,7 +363,7 @@ export default {
           obj.option = {
             name: item.flowSummary,
             value: '',
-            arrowIcon: 'iconfont icon-input',
+            arrowIcon: 'left',
           };
           return obj;
         });

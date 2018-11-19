@@ -6,11 +6,12 @@ axios.defaults.headers = {
 };
 
 axios.defaults.transformRequest = [data => qs.stringify(data)];
+axios.defaults.withCredentials = true; // 请求时携带cookie信息,避免session发生变化
 
 const request = (data, url, type = 'POST', timeout = 10000) => {
   const options = {
     data,
-    url,
+    url:`http://172.16.0.125:8086/${url}`,
     method: type,
     timeout,
   };
