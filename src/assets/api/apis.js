@@ -8,7 +8,7 @@ apis.login = obj => request(obj, 'loginAction!loginAjax').then((res) => {
     return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
 });
 
 // 登出

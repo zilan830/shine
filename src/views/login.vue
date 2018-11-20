@@ -1,5 +1,5 @@
 <template>
-  <div class="login" :style="{ background:`url('http://img.hb.aicdn.com/dbb3c7943cbc7b99de9a799124f1489cc388f63b3fb66-ESHNLR_fw658') no-repeat bottom /cover` }">
+  <div class="login">
     <p class="title">和信移动OA</p>
     <cube-form
         :model="model"
@@ -11,85 +11,88 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import backgroundImg from '../assets/image/2.png';
+import { mapActions } from "vuex";
+import backgroundImg from "../assets/image/2.png";
 
 export default {
-  name: 'login',
+  name: "login",
   data() {
     return {
       model: {
-        userName: '周伟',
-        password: '11111111',
-        backgroundImg,
+        userName: "周伟",
+        password: "11111111",
+        backgroundImg
       },
       schema: {
         groups: [
           {
             fields: [
               {
-                type: 'input',
-                modelKey: 'userName',
-                label: '用户名',
+                type: "input",
+                modelKey: "userName",
+                label: "用户名",
                 props: {
-                  placeholder: '请输入用户名',
+                  placeholder: "请输入用户名",
                   clearable: true,
-                  autocomplete: true,
+                  autocomplete: true
                 },
                 rules: {
-                  required: true,
+                  required: true
                 },
-                messages: '请输入用户名',
+                messages: "请输入用户名"
               },
               {
-                type: 'input',
-                modelKey: 'password',
-                label: '密码',
+                type: "input",
+                modelKey: "password",
+                label: "密码",
                 props: {
-                  placeholder: '请输入密码',
-                  type: 'password',
+                  placeholder: "请输入密码",
+                  type: "password",
                   clearable: true,
                   autocomplete: true,
                   eye: {
                     open: false,
-                    reverse: false,
-                  },
+                    reverse: false
+                  }
                 },
                 rules: {
-                  required: true,
+                  required: true
                 },
-                messages: '请输入密码',
-              },
-            ],
+                messages: "请输入密码"
+              }
+            ]
           },
           {
             fields: [
               {
-                type: 'submit',
-                label: '登录',
-              },
-            ],
-          },
-        ],
+                type: "submit",
+                label: "登录"
+              }
+            ]
+          }
+        ]
       },
       options: {
         scrollToInvalidField: true,
-        layout: 'standard', // classic fresh
-      },
+        layout: "standard" // classic fresh
+      }
     };
   },
   methods: {
     submitHandler() {
-      // this.$router.push("/index");
+      window.event
+        ? (window.event.cancelBubble = true)
+        : event.stopPropagation();
+      window.event ? (window.event.returnValue = false) : e.preventDefault();
       const data = {
-        'sysUser.userAccout': this.model.userName,
-        'sysUser.userPwd': this.model.password,
+        "sysUser.userAccout": this.model.userName,
+        "sysUser.userPwd": this.model.password
       };
       this.login({ data, router: this.$router });
       this.getDataDictionary();
     },
-    ...mapActions(['login', 'getDataDictionary']),
-  },
+    ...mapActions(["login", "getDataDictionary"])
+  }
 };
 </script>
 
@@ -103,6 +106,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   width: 100%;
   height: 100%;
   position: relative;
+  background: url('./../assets/image/2.png') no-repeat bottom / cover;
 
   .title {
     width: 100%;

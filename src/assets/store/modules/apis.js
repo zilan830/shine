@@ -137,7 +137,6 @@ const apis = {
     getLeavePendData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
       requestApis.getPendingLeaveData().then((res) => {
-        console.log('res', res);
         dispatch('updateLoading', { isLoading: false });
         commit({ type: 'getLeavePendData', data: res });
       }).catch(() => {
@@ -262,7 +261,6 @@ const apis = {
     // 下一步信息
     getNextInfo({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
-      console.log('payload', payload);
       requestApis.getNextStepInfo({ ...payload.param }).then((res) => {
         dispatch('updateLoading', { isLoading: false });
         commit({ type: 'getNextStepInfo', data: res.nextInstNode });
@@ -276,9 +274,7 @@ const apis = {
     getNextSave({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
       const { router } = payload;
-      console.log('payload', payload);
       requestApis.getNextSave({ ...payload.param }).then((res) => {
-        console.log('res', res);
         dispatch('updateLoading', { isLoading: false });
         router.push('/leave');
       }).catch(() => {

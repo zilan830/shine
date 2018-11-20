@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import router from './../../router.js'
 
 axios.defaults.headers = {
   'Content-Type': 'application/x-www-form-urlencoded',
@@ -20,8 +21,8 @@ const request = (data, url, type = 'POST', timeout = 10000) => {
     if (status !== 200) {
       return Promise.reject(new Error('服务器请求失败'));
     }
-    if (!data.success && data.msg === '当前登录用户信息不存在！') {
-      window.location.href = '/';
+    if ((!data.success && data.msg === '当前登录用户信息不存在！') || typeof data.msg === 'object') {
+      router.push('/')
     }
     return Promise.resolve(data);
   });
