@@ -21,38 +21,37 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import _ from 'lodash';
-import Menus from '../assets/common/menus';
+import { mapState, mapActions } from "vuex";
+import _ from "lodash";
+import Menus from "../assets/common/menus";
 
 export default {
-  name: 'index',
+  name: "index",
   data() {
     return {
       tabColumn: _.cloneDeep(Menus.tabColumn),
-      headerName: '',
-      menu: _.cloneDeep(Menus.menuList),
+      headerName: "",
+      menu: _.cloneDeep(Menus.menuList)
     };
   },
   // 刷新问题可暂不考虑，因为手机中不会出现，但是后期可以加上
   computed: {
     ...mapState({
-      style: state => state.route.style,
+      style: state => state.route.style
     }),
     isShowBack() {
       const { index } = this.$route.meta;
       return index.toString().length > 2;
-    },
+    }
   },
   watch: {
     $route(to, from) {
       this.transitionStyle({
         fromIndex: from.meta.index,
-        toIndex: to.meta.index,
+        toIndex: to.meta.index
       });
       this.changeHeaderName(to.meta.index);
-      
-    },
+    }
   },
   mounted() {
     this.changeHeaderName(this.$route.meta.index);
@@ -60,26 +59,26 @@ export default {
       "onorientationchange" in window ? "orientationchange" : "resize",
       () => {
         if (window.orientation === 90 || window.orientation === -90) {
-            //想把下面的alert换成能够控制v-show的代码
-            console.log("!!!")
-          alert("横屏可能导致页面异常，建议竖屏操作！"
-          ); // 这里用 this 作用域就不对了.
-          //alert("123");仅alert纯文本可以正常运行
+          this.$createDialog({
+            type: "alert",
+            title: "提醒",
+            content: "横屏可能影响操作，请保持竖排操作哦",
+            icon: "cubeic-alert"
+          }).show();
         }
-        //window.location.reload();
       },
       false
-      );
+    );
   },
   methods: {
-    ...mapActions(['transitionStyle']),
+    ...mapActions(["transitionStyle"]),
     handlerBack() {
       switch (this.$route.name) {
-        case 'nextapprove':
-          this.$router.push('/leave');
+        case "nextapprove":
+          this.$router.push("/leave");
           break;
-        case 'leave':
-          this.$router.push('/apply');
+        case "leave":
+          this.$router.push("/apply");
           break;
         default:
           this.$router.back();
@@ -89,7 +88,7 @@ export default {
     changeHeaderName(index) {
       // 尾递归查找对应index并给名字
       let stack = [];
-      this.menu.forEach((obj) => {
+      this.menu.forEach(obj => {
         stack.push(obj);
       });
       let item = {};
@@ -106,21 +105,18 @@ export default {
     },
     jumpLogin() {
       // 获取本地用户信息
-      const loginUser = window.localStorage.getItem('userInfo');
+      const loginUser = window.localStorage.getItem("userInfo");
       // 若没有 则跳转到登录页
       if (!loginUser) {
-        this.$router.push('/');
+        this.$router.push("/");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-.fold-pop-out-enter-active,
-.fold-pop-out-leave-active,
-.fold-pop-in-enter-active,
-.fold-pop-in-leave-active {
+.fold-pop-out-enter-active, .fold-pop-out-leave-active, .fold-pop-in-enter-active, .fold-pop-in-leave-active {
   overflow: hidden;
   will-change: transform;
   transition: all 300ms;
@@ -190,13 +186,13 @@ export default {
   // top: 46px;
 }
 
-.footerContainer{
-  .cube-tab-bar{
-    .cube-tab{
-      >i{
-        font-size: 30px
-      }
+.footerContainer {
+  .cube-tab-bar {
+    .cube-tab {
+      >i {
+        font-size: 30px;
       }
     }
   }
+}
 </style>

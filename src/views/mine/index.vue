@@ -6,7 +6,7 @@
         <!-- <p class="position">移动组-组员</p> -->
     </div>
     <div class="operate-container">
-      <cube-button :primary="true" @click="handleLogin">登 出</cube-button>
+      <cube-button :primary="true" @click="handleLoginOut">登 出</cube-button>
     </div>
   </div>
 </template>
@@ -27,8 +27,33 @@ export default {
     this.getUserInfo();
   },
   methods: {
-    handleLogin() {
-      this.signOut({ router: this.$router });
+    handleLoginOut() {
+      this.$createDialog({
+        type: 'confirm',
+        icon: 'cubeic-alert',
+        title: '是否确认登出',
+        //content: '是否确认登出',
+        confirmBtn: {
+          text: '确定',
+          active: true,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        cancelBtn: {
+          text: '取消',
+          active: false,
+          disabled: false,
+          href: 'javascript:;'
+        },
+        onConfirm: () => this.signOut({ router: this.$router }),
+        onCancel: () => {
+          this.$createToast({
+            type: 'warn',
+            time: 1000,
+            txt: '取消登出'
+          }).show()
+        }
+      }).show()
     },
     getUserInfo() {
       const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
