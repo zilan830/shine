@@ -92,7 +92,7 @@ export default {
   }
 
   .operate-container {
-    padding: 15px 15px 30px;
+    padding: 10px 10px 30px;
     flex-direction: column-reverse;
     flex: 1;
     display: flex;

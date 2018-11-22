@@ -155,7 +155,7 @@ export default {
             flex-direction: column;
             justify-content: space-around;
             color: white;
-            padding: 15px;
+            padding: 10px;
         }
     }
 
@@ -165,7 +165,7 @@ export default {
 
         .item-header {
             height: 30px;
-            padding: 0 15px;
+            padding: 0 10px;
             border-bottom: 1px solid $color-light-grey-opacity;
             display: flex;
             justify-content: space-between;
@@ -196,7 +196,7 @@ export default {
         .apply-container {
             display: flex;
             flex-wrap: wrap;
-            padding: 10px 15px;
+            padding: 10px 10px;
 
             .apply-item {
                 height: auto;

@@ -422,9 +422,6 @@ export default {
       },
     };
   },
-  updated() {
-    console.log('1111');
-  },
   methods: {
     submitHandler(e) {
       e.preventDefault();

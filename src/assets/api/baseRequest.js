@@ -16,6 +16,7 @@ baseRequest.request = (data, url, type = 'POST', timeout = 10000) => {
   const options = {
     data:data,
     url:`http://oa1.workmanage.cn:8899/oa/${url}`,
+    //url:`http://172.16.0.125:8086/${url}`,
     method: type,
     timeout,
   };
@@ -36,7 +37,7 @@ baseRequest.request = (data, url, type = 'POST', timeout = 10000) => {
 baseRequest.nativeRequest = (requestType,data, url) => {
   store.dispatch('updateLoading', { isLoading: true });
   window.android.requestWebData(
-        `http://oa1.workmanage.cn:8899/oa/${url}`,
+        `http://172.16.0.125:8086/${url}`,
         JSON.stringify(data),
         requestType
       );

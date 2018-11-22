@@ -1,5 +1,5 @@
 <template>
-    <div class="leave">
+    <div :class="`leave ${isHide ? '':'height'}`">
         <cube-tab-bar v-model="selectedLabel"
                     show-slider
                     :use-transition="disabled"
@@ -19,8 +19,9 @@
         >
           <!-- 待处理 -->
           <cube-slide-item>
+            <div></div>
             <cube-scroll :options="scrollOptions">
-                <div class="list-wrapper">
+                <div :class="`list-wrapper ${ isHide ? hide : ''}`">
                     <div v-if="dataList.pend.length > 0">
                     <hx-cell
                     v-for="(item,index) in dataList.pend"
@@ -33,6 +34,7 @@
                 </div>
             </cube-scroll>
           </cube-slide-item>
+          
           <!-- 已处理 -->
           <cube-slide-item>
             <cube-scroll :options="scrollOptions">
@@ -56,7 +58,7 @@
           <!-- 已办结 -->
           <cube-slide-item>
             <cube-scroll :options="scrollOptions">
-                <div class="list-wrapper">
+                <div :class="`list-wrapper ${ isHide ? hide : ''}`">
                     <div v-if="dataList.end.length > 0">
                     <hx-cell
                     v-for="(item,index) in dataList.end"
@@ -112,7 +114,7 @@
           </cube-slide-item>
         </cube-slide>
       </div>
-        <i v-if="hasOperate" @click="handleCreate()" class="icon-add iconfont addButton"></i>
+        <i @click="handleCreate()" :class="`icon-add iconfont addButton ${ hasOperate ? '' : hide}`"></i>
     </div>
 </template>
 
@@ -125,6 +127,7 @@ export default {
   data() {
     return {
       selectedLabel: "待处理",
+      hide:'hide',
       disabled: false,
       tabLabels: [
         {
@@ -163,25 +166,27 @@ export default {
         cancel: [],
         stop: []
       },
-      isFirst: true
+      isFirst: true,
+      isHide: true,
     };
   },
-  mounted() {
+  created() {
     if (this.$route.query.type) {
       const { type } = this.$route.query;
       this.selectedLabel = type;
     }
+  },
+  mounted() {
     this.$nextTick(() => {
-      
-      // 获取启动权限
-      this.getOperate();
       // 获取请假数据
       this.getLeavePendData();
       this.getLeaveFinishedData();
       this.getLeaveEndData();
       this.getLeaveCancelData();
       this.getLeaveStopData();
-    })
+       // 获取启动权限
+       this.getOperate();
+    });
   },
   methods: {
     changePage(current) {
@@ -195,16 +200,6 @@ export default {
       this.$refs.tabNav.setSliderTransform(deltaX);
     },
     handleItemClick(id, dataId, formViewId, nodeName, all) {
-      console.log(
-        "id",
-        id,
-        "dataId",
-        dataId,
-        "formViewId",
-        formViewId,
-        "all",
-        all
-      );
       let type = 6;
       // type:{0:创建||开始,1:上级主管审批,2:分管总监审批,3:总经理审批,4:打回修改,5:人事告知销假,6:查看}
       switch (nodeName) {
@@ -255,8 +250,7 @@ export default {
   },
   computed: {
     initialIndex() {
-      const { type } = this.$route.query;
-      let index = type === '已办结' ? 2: 0;
+      let index = 0;
       index = findIndex(
         this.tabLabels,
         item => item.label === this.selectedLabel
@@ -264,106 +258,112 @@ export default {
       return index;
     },
     ...mapState({
-      hasOperate: state => state.apis.hasOperate,
       leavePendingData: state => state.apis.leavePendingData,
       leaveFinishedData: state => state.apis.leaveFinishedData,
       leaveEndData: state => state.apis.leaveEndData,
       leaveCancelData: state => state.apis.leaveCancelData,
-      leaveStoppedData: state => state.apis.leaveStoppedData
+      leaveStoppedData: state => state.apis.leaveStoppedData,
+      hasOperate: state => state.apis.hasOperate,
     })
   },
   watch: {
     // 待处理
     leavePendingData(val = []) {
-        const pend = val.map(item => {
-          const obj = {};
-          obj.nodeName = item.nodeName;
-          obj.flowSummary = item.flowSummary;
-          obj.dataId = item.dataId;
-          obj.id = item.id;
-          obj.formViewId = item.formViewId;
-          obj.all = item;
-          obj.option = {
-            name: item.flowSummary,
-            value: "",
-            arrowIcon: "iconfont icon-input"
-          };
-          return obj;
-        });
-        this.dataList.pend = pend;
+      const pend = val.map(item => {
+        const obj = {};
+        obj.nodeName = item.nodeName;
+        obj.flowSummary = item.flowSummary;
+        obj.dataId = item.dataId;
+        obj.id = item.id;
+        obj.formViewId = item.formViewId;
+        obj.all = item;
+        obj.option = {
+          name: item.flowSummary,
+          value: "",
+          arrowIcon: "iconfont icon-input"
+        };
+        return obj;
+      });
+      this.dataList.pend = pend;
+      if(this.$route.query.type === '待处理'){
+        this.isHide = false;
+      }
     },
     // 已处理
     leaveFinishedData(val = []) {
-        const finished = val.map(item => {
-          const obj = {};
-          obj.nodeName = "查看";
-          obj.flowSummary = item.flowSummary;
-          obj.dataId = item.dataId;
-          obj.id = item.id;
-          obj.formViewId = item.formViewId;
-          obj.option = {
-            name: item.flowSummary,
-            value: "",
-            arrowIcon: "left"
-          };
-          return obj;
-        });
-        this.dataList.finished = finished;
+      const finished = val.map(item => {
+        const obj = {};
+        obj.nodeName = "查看";
+        obj.flowSummary = item.flowSummary;
+        obj.dataId = item.dataId;
+        obj.id = item.id;
+        obj.formViewId = item.formViewId;
+        obj.option = {
+          name: item.flowSummary,
+          value: "",
+          arrowIcon: "left"
+        };
+        return obj;
+      });
+      this.dataList.finished = finished;
     },
     // 已办结
     leaveEndData(val = []) {
-        const end = val.map(item => {
-          const obj = {};
-          obj.nodeName = "查看";
-          obj.flowSummary = item.flowSummary;
-          obj.dataId = item.dataId;
-          obj.id = item.id;
-          obj.formViewId = item.formViewId;
-          obj.option = {
-            name: item.flowSummary,
-            value: "",
-            arrowIcon: "left"
-          };
-          return obj;
-        });
-        this.dataList.end = end;
+      const end = val.map(item => {
+        const obj = {};
+        obj.nodeName = "查看";
+        obj.flowSummary = item.flowSummary;
+        obj.dataId = item.dataId;
+        obj.id = item.id;
+        obj.formViewId = item.formViewId;
+        obj.option = {
+          name: item.flowSummary,
+          value: "",
+          arrowIcon: "left"
+        };
+        return obj;
+      });
+      this.dataList.end = end;
+      if(this.$route.query.type === '已办结'){
+        this.isHide = false;
+      }
     },
     // 已撤销
     leaveCancelData(val = []) {
-        const cancel = val.map(item => {
-          const obj = {};
-          obj.nodeName = "查看";
-          obj.flowSummary = item.flowSummary;
-          obj.dataId = item.dataId;
-          obj.id = item.id;
-          obj.formViewId = item.formViewId;
-          obj.option = {
-            name: item.flowSummary,
-            value: "",
-            arrowIcon: "left"
-          };
-          return obj;
-        });
-        this.dataList.cancel = cancel;
+      const cancel = val.map(item => {
+        const obj = {};
+        obj.nodeName = "查看";
+        obj.flowSummary = item.flowSummary;
+        obj.dataId = item.dataId;
+        obj.id = item.id;
+        obj.formViewId = item.formViewId;
+        obj.option = {
+          name: item.flowSummary,
+          value: "",
+          arrowIcon: "left"
+        };
+        return obj;
+      });
+      this.dataList.cancel = cancel;
     },
     // 已中止
     leaveStoppedData(val = []) {
-        const stop = val.map(item => {
-          const obj = {};
-          obj.nodeName = "查看";
-          obj.flowSummary = item.flowSummary;
-          obj.dataId = item.dataId;
-          obj.id = item.id;
-          obj.formViewId = item.formViewId;
-          obj.option = {
-            name: item.flowSummary,
-            value: "",
-            arrowIcon: "left"
-          };
-          return obj;
-        });
-        this.dataList.stop = stop;
-    }
+      const stop = val.map(item => {
+        const obj = {};
+        obj.nodeName = "查看";
+        obj.flowSummary = item.flowSummary;
+        obj.dataId = item.dataId;
+        obj.id = item.id;
+        obj.formViewId = item.formViewId;
+        obj.option = {
+          name: item.flowSummary,
+          value: "",
+          arrowIcon: "left"
+        };
+        return obj;
+      });
+      this.dataList.stop = stop;
+    },
   }
 };
 </script>
@@ -372,17 +372,30 @@ export default {
 @require '~cube-ui/src/common/stylus/variable.styl';
 @require '../../../theme.styl';
 
-.leave {
-  height: 100%;
 
+  
+.leave {
+  background-color:#f7f7f7:
+  transition:all 0.3s
+  &.height{
+    height: 100%;
+    transition:all 0.3s
+    }
   .addButton {
     z-index: 999;
     position: absolute;
-    bottom: 15px;
+    top: 90vh;
     right: 15px;
     font-size: 60px;
     background-color: white;
     border-radius: 100%;
+    opacity:1;
+    transition:all 0.3s
+    &.hide {
+      top:0;
+      opacity : 0;
+      transition:all 0.3s
+    }
   }
 }
 
@@ -414,14 +427,21 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    transition: none;
   }
 
   .list-wrapper {
     overflow: hidden;
-    padding: 15px;
+    padding: 10px;
+    transition: all 0.3s;
+    opacity : 1;
+
+    &.hide {
+      opacity : 0;
+    }
 
     li {
-      padding: 15px 10px;
+      padding: 10px 10px;
       margin-top: 10px;
       text-align: left;
       background-color: white;

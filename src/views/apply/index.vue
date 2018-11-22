@@ -52,8 +52,6 @@ export default {
   },
   methods: {
     handleApply(index, type) {
-      console.log("index", index, type);
-
       // 路由参数
       this.$router.push({ path: "/leave", query: { type } });
     },
@@ -83,7 +81,7 @@ export default {
   .apply-container {
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    padding: 10px;
 
     .apply-item {
       display: flex;

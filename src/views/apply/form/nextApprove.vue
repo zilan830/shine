@@ -146,10 +146,6 @@ export default {
       };
       this.getLeaveFormData({ param: obj });
     },
-    test(param) {
-      console.log('1111');
-      this.getNextSave({ param, router: this.$router });
-    },
     ...mapActions(['getNextInfo', 'getNextSave']),
   },
   computed: {
@@ -160,29 +156,6 @@ export default {
   },
   watch: {
     nextStepInfo(val) {
-      console.log('zhegelimleval', val);
-      // if (val.nodeName === "结束") {
-      //   const { type, all } = this.$route.query;
-      //   console.log("jieshu")
-      //   delete val.actorUserId;
-      //   delete val.actorUserName;
-      //   delete val.allActorUsers;
-      //   const param = {
-      //     "conditionMap.userIds": "",
-      //     "conditionMap.nodeMask": "",
-      //     "flowInst.id": val.flowInstId,
-      //     currentNode : JSON.stringify(all),
-      //     nextNode: JSON.stringify(val),
-      //     instType: "pending"
-      //   };
-      //   this.getNextSave({ param, router: this.$router });
-      //   //this.$store.dispatch('getNextSave',{param,router:this.$router})
-      //   console.log("this.$store",this.$store)
-
-      //   //this.test(param);
-
-      //   // this.getNextSave({ param });
-      // }
       this.data = val;
       this.name = val.nodeOperateUsers.map(item => item.userName);
       this.nameList = val.nodeOperateUsers.map(item => {

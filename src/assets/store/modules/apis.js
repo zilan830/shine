@@ -11,7 +11,7 @@ const apis = {
     // 消息
     news: {},
     // 启动权限
-    hasOperate: true,
+    hasOperate: false,
     // pending-待处理；
     leavePendingData: [],
     // finished-已处理；

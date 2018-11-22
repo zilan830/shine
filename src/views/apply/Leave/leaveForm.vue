@@ -469,7 +469,7 @@ export default {
           && item.modelKey !== 'sjzgspyj'
           && item.modelKey !== 'sjzgsprq'
         ) {
-          items.type='input';
+          item.type='input';
           item.props.disabled = true;
           item.rules.required = false;
           item.props.placeholder = '';

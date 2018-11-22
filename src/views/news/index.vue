@@ -72,7 +72,7 @@ export default {
 
 .news {
   .news-container {
-    padding: 15px;
+    padding: 10px;
   }
 }
 </style>

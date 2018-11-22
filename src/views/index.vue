@@ -1,13 +1,11 @@
 <template>
     <div class="wrapperContainer">
-      <!-- <transition :name="`vux-pop-${style}`"> -->
         <hx-header
         v-if="headerName !== '首页'"
         @on-click-back="handlerBack()"
         :left-options="{showBack :isShowBack,preventGoBack:true}">
           {{headerName}}
         </hx-header>
-      <!-- </transition> -->
         <main class="content">
             <transition :name="`fold-pop-${style}`">
                 <router-view class="router-view"/>
@@ -120,7 +118,7 @@ export default {
   overflow: hidden;
   will-change: transform;
   transition: all 300ms;
-  // height: 100%;
+  //height: 100%;
   position: absolute;
   backface-visibility: hidden;
   perspective: 1000;
@@ -183,7 +181,7 @@ export default {
 
 .router-view {
   width: 100%;
-  // top: 46px;
+  //top: 46px;
 }
 
 .footerContainer {
