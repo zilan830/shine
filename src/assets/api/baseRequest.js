@@ -1,6 +1,9 @@
 import axios from 'axios';
 import qs from 'qs';
-import router from './../../router.js'
+import router from './../../router.js';
+import store from './../../store.js';
+
+const baseRequest={};
 
 axios.defaults.headers = {
   'Content-Type': 'application/x-www-form-urlencoded',
@@ -9,10 +12,10 @@ axios.defaults.headers = {
 axios.defaults.transformRequest = [data => qs.stringify(data)];
 axios.defaults.withCredentials = true; // 请求时携带cookie信息,避免session发生变化
 
-const request = (data, url, type = 'POST', timeout = 10000) => {
+baseRequest.request = (data, url, type = 'POST', timeout = 10000) => {
   const options = {
-    data,
-    url:`http://172.16.0.125:8086/${url}`,
+    data:data,
+    url:`http://oa1.workmanage.cn:8899/oa/${url}`,
     method: type,
     timeout,
   };
@@ -28,4 +31,18 @@ const request = (data, url, type = 'POST', timeout = 10000) => {
   });
 };
 
-export default request;
+//const returnDatas = window.nativeReturnData();
+
+baseRequest.nativeRequest = (requestType,data, url) => {
+  store.dispatch('updateLoading', { isLoading: true });
+  window.android.requestWebData(
+        `http://oa1.workmanage.cn:8899/oa/${url}`,
+        JSON.stringify(data),
+        requestType
+      );
+      if(returnData){
+        return Promise.resolve(returnData);
+      }
+}
+
+export default baseRequest;

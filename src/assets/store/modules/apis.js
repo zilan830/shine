@@ -1,4 +1,6 @@
 import requestApis from '../../api/apis';
+import { isAndroid } from './../../methods/helpers/util.js';
+import baseRequest from './../../../assets/api/baseRequest.js';
 
 const apis = {
   state: {
@@ -85,202 +87,261 @@ const apis = {
     login({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
       const { router } = payload;
-      requestApis.login({ ...payload.data }).then((res) => {
-        const { loginUser } = res;
-        window.localStorage.setItem('userInfo', JSON.stringify(loginUser));
-        dispatch('updateLoading', { isLoading: false });
-        router.push('/index');
-      }).catch((err) => {
-        dispatch('updateLoading', { isLoading: false });
-        const message = err.operateMessage ? err.operateMessage : '登录失败';
-        commit({ type: 'getError', message });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('login', { ...payload.data }, 'loginAction!loginAjax');
+      } else {
+        requestApis.login({ ...payload.data }).then((res) => {
+          const { loginUser } = res;
+          window.localStorage.setItem('userInfo', JSON.stringify(loginUser));
+          dispatch('updateLoading', { isLoading: false });
+          router.push('/index');
+        }).catch((err) => {
+          dispatch('updateLoading', { isLoading: false });
+          const message = err.operateMessage ? err.operateMessage : '登录失败';
+          commit({ type: 'getError', message });
+        });
+
+      }
+
     },
     // 登出
     signOut({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
       const { router } = payload;
-      requestApis.signOut().then(() => {
-        window.localStorage.removeItem('userInfo');
-        dispatch('updateLoading', { isLoading: false });
-        router.push('/');
-      }).catch(() => {
-        commit({ type: 'getError', message: '登出失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('signout', {}, 'loginAction!logoutAjax');
+      } else {
+        requestApis.signOut().then(() => {
+          window.localStorage.removeItem('userInfo');
+          dispatch('updateLoading', { isLoading: false });
+          router.push('/');
+        }).catch(() => {
+          commit({ type: 'getError', message: '登出失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // 请假
     // 获取请假启动权限
     getOperate({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getOperate().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getOperate', hasOperate: res });
-      }).catch((err) => {
-        commit({ type: 'getError', message: '获取权限请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('getOperate', {}, 'leaveFlowAction!getTabsInfo');
+      } else {
+        requestApis.getOperate().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getOperate', hasOperate: res });
+        }).catch((err) => {
+          commit({ type: 'getError', message: '获取权限请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // 获取消息列表
     getNews({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getNews().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getNews', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取消息列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('getNews', {}, 'leaveFlowAction!getMyPendingTasks');
+      } else {
+        requestApis.getNews().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getNews', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取消息列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // 获取请假数据
     // pending-待处理；
     getLeavePendData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getPendingLeaveData().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeavePendData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取待处理列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('pending', { instType: 'pending' }, 'leaveFlowAction!getFlowInstInfo');
+      } else {
+        requestApis.getPendingLeaveData().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeavePendData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取待处理列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // finished-已处理；
     getLeaveFinishedData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getFinishedLeaveData().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveFinishedData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取已处理列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('finished', { instType: 'finished' }, 'leaveFlowAction!getFlowInstInfo');
+      } else {
+        requestApis.getFinishedLeaveData().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveFinishedData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取已处理列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // end-已办结；
     getLeaveEndData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getEndLeaveData().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveEndData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取已办结列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('end', { instType: 'end' }, 'leaveFlowAction!getFlowInstInfo');
+      } else {
+        requestApis.getEndLeaveData().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveEndData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取已办结列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // cancel-已撤销；
     getLeaveCancelData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getCancelLeaveData().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveCancelData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取已撤销列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('cancel', { instType: 'cancel' }, 'leaveFlowAction!getFlowInstInfo');
+      } else {
+        requestApis.getCancelLeaveData().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveCancelData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取已撤销列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // stopped-已中止
     getLeaveStopData({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getStopLeaveData().then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveStopData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取已中止列表请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('stopped', { instType: 'stopped' }, 'leaveFlowAction!getFlowInstInfo');
+      } else {
+        requestApis.getStopLeaveData().then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveStopData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取已中止列表请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
     // 获取表单数据
     getLeaveFormData({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getFormLeaveData({ ...payload.param }).then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveFormData', data: res });
-      }).catch(() => {
-        commit({ type: 'getError', message: '请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('leaveFormData', { ...payload.param }, 'leaveFlowAction!getFlowInstDataInfo');
+      } else {
+        requestApis.getFormLeaveData({ ...payload.param }).then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveFormData', data: res });
+        }).catch(() => {
+          commit({ type: 'getError', message: '请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
 
     // 获取数据字典
     getDataDictionary({ dispatch, commit }) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getDataDictionary({}).then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        // 职位信息
-        const positionList = res.post.map((item) => {
-          const obj = {
-            id: item.id,
-            title: item.dataName,
-          };
-          return obj;
-        });
-        const post = positionList.map(item => item.title);
-        window.localStorage.setItem('positionList', JSON.stringify(positionList));
-        window.localStorage.setItem('post', JSON.stringify(post));
+      if (isAndroid) {
+        baseRequest.nativeRequest('getDataDictionary', {}, 'leaveFlowAction!getSysData');
+      } else {
 
-        // 请假信息
-        const leaveList = res.leaveType.map((item) => {
-          const obj = {
-            id: item.id,
-            title: item.dataName,
-          };
-          return obj;
-        });
-        const leave = leaveList.map(item => item.title);
-        window.localStorage.setItem('leaveList', JSON.stringify(leaveList));
-        window.localStorage.setItem('leave', JSON.stringify(leave));
+        requestApis.getDataDictionary({}).then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          // 职位信息
+          const positionList = res.post.map((item) => {
+            const obj = {
+              id: item.id,
+              title: item.dataName,
+            };
+            return obj;
+          });
+          const post = positionList.map(item => item.title);
+          window.localStorage.setItem('positionList', JSON.stringify(positionList));
+          window.localStorage.setItem('post', JSON.stringify(post));
 
-        // 组别
-        const groupList = res.group.map((item) => {
-          const obj = {
-            id: item.id,
-            title: item.dataName,
-          };
-          return obj;
+          // 请假信息
+          const leaveList = res.leaveType.map((item) => {
+            const obj = {
+              id: item.id,
+              title: item.dataName,
+            };
+            return obj;
+          });
+          const leave = leaveList.map(item => item.title);
+          window.localStorage.setItem('leaveList', JSON.stringify(leaveList));
+          window.localStorage.setItem('leave', JSON.stringify(leave));
+
+          // 组别
+          const groupList = res.group.map((item) => {
+            const obj = {
+              id: item.id,
+              title: item.dataName,
+            };
+            return obj;
+          });
+          const group = groupList.map(item => item.title);
+          window.localStorage.setItem('groupList', JSON.stringify(groupList));
+          window.localStorage.setItem('group', JSON.stringify(group));
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取数据字典请求失败,请重新登录' });
+          dispatch('updateLoading', { isLoading: false });
         });
-        const group = groupList.map(item => item.title);
-        window.localStorage.setItem('groupList', JSON.stringify(groupList));
-        window.localStorage.setItem('group', JSON.stringify(group));
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取数据字典请求失败,请重新登录' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      }
     },
 
     // 请假保存
     getLeaveSave({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getLeaveSave({ ...payload.param }).then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getLeaveSave', data: res.data });
-      }).catch(() => {
-        commit({ type: 'getError', message: '保存信息请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('leaveSave', { ...payload.param }, 'leaveFlowAction!save');
+      } else {
+        requestApis.getLeaveSave({ ...payload.param }).then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getLeaveSave', data: res.data });
+        }).catch(() => {
+          commit({ type: 'getError', message: '保存信息请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
 
     // 下一步信息
     getNextInfo({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
-      requestApis.getNextStepInfo({ ...payload.param }).then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        commit({ type: 'getNextStepInfo', data: res.nextInstNode });
-      }).catch(() => {
-        commit({ type: 'getError', message: '获取下一步信息请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('nextInfo', { ...payload.param }, 'leaveFlowAction!nexStepInfo');
+      } else {
+        requestApis.getNextStepInfo({ ...payload.param }).then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          commit({ type: 'getNextStepInfo', data: res.nextInstNode });
+        }).catch(() => {
+          commit({ type: 'getError', message: '获取下一步信息请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
 
     // 下一步流转
     getNextSave({ dispatch, commit }, payload) {
       dispatch('updateLoading', { isLoading: true });
       const { router } = payload;
-      requestApis.getNextSave({ ...payload.param }).then((res) => {
-        dispatch('updateLoading', { isLoading: false });
-        router.push('/leave');
-      }).catch(() => {
-        commit({ type: 'getError', message: '下一步流转请求失败' });
-        dispatch('updateLoading', { isLoading: false });
-      });
+      if (isAndroid) {
+        baseRequest.nativeRequest('nextSave', { ...payload.param }, 'leaveFlowAction!nextSave');
+      } else {
+        requestApis.getNextSave({ ...payload.param }).then((res) => {
+          dispatch('updateLoading', { isLoading: false });
+          router.push('/leave');
+        }).catch(() => {
+          commit({ type: 'getError', message: '下一步流转请求失败' });
+          dispatch('updateLoading', { isLoading: false });
+        });
+      }
     },
 
   },

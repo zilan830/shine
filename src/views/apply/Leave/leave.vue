@@ -117,31 +117,31 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import { findIndex } from '../../../assets/methods/helpers/util.js';
+import { mapState, mapActions } from "vuex";
+import { findIndex } from "../../../assets/methods/helpers/util.js";
 
 export default {
-  name: 'leave',
+  name: "leave",
   data() {
     return {
-      selectedLabel: '待处理',
+      selectedLabel: "待处理",
       disabled: false,
       tabLabels: [
         {
-          label: '待处理',
+          label: "待处理"
         },
         {
-          label: '已处理',
+          label: "已处理"
         },
         {
-          label: '已办结',
+          label: "已办结"
         },
         {
-          label: '已撤销',
+          label: "已撤销"
         },
         {
-          label: '已中止',
-        },
+          label: "已中止"
+        }
       ],
       loop: false,
       autoPlay: false,
@@ -150,20 +150,20 @@ export default {
         listenScroll: true,
         probeType: 3,
         /* lock y-direction when scrolling horizontally and  vertically at the same time */
-        directionLockThreshold: 0,
+        directionLockThreshold: 0
       },
       scrollOptions: {
         /* lock x-direction when scrolling horizontally and  vertically at the same time */
-        directionLockThreshold: 0,
+        directionLockThreshold: 0
       },
       dataList: {
         pend: [],
         finished: [],
         end: [],
         cancel: [],
-        stop: [],
+        stop: []
       },
-      isFirst: true,
+      isFirst: true
     };
   },
   mounted() {
@@ -171,14 +171,17 @@ export default {
       const { type } = this.$route.query;
       this.selectedLabel = type;
     }
-    // 获取启动权限
-    this.getOperate();
-    // 获取请假数据
-    this.getLeavePendData();
-    this.getLeaveFinishedData();
-    this.getLeaveEndData();
-    this.getLeaveCancelData();
-    this.getLeaveStopData();
+    this.$nextTick(() => {
+      
+      // 获取启动权限
+      this.getOperate();
+      // 获取请假数据
+      this.getLeavePendData();
+      this.getLeaveFinishedData();
+      this.getLeaveEndData();
+      this.getLeaveCancelData();
+      this.getLeaveStopData();
+    })
   },
   methods: {
     changePage(current) {
@@ -193,69 +196,69 @@ export default {
     },
     handleItemClick(id, dataId, formViewId, nodeName, all) {
       console.log(
-        'id',
+        "id",
         id,
-        'dataId',
+        "dataId",
         dataId,
-        'formViewId',
+        "formViewId",
         formViewId,
-        'all',
-        all,
+        "all",
+        all
       );
       let type = 6;
       // type:{0:创建||开始,1:上级主管审批,2:分管总监审批,3:总经理审批,4:打回修改,5:人事告知销假,6:查看}
       switch (nodeName) {
-        case '开始':
+        case "开始":
           type = 0;
           break;
-        case '上级主管审批':
+        case "上级主管审批":
           type = 1;
           break;
-        case '分管总监审批':
+        case "分管总监审批":
           type = 2;
           break;
-        case '总经理审批':
+        case "总经理审批":
           type = 3;
           break;
-        case '打回修改':
+        case "打回修改":
           type = 4;
           break;
-        case '人事告知销假':
+        case "人事告知销假":
           type = 5;
           break;
         default:
           break;
       }
       this.$router.push({
-        path: '/leaveform',
+        path: "/leaveform",
         query: {
           formViewId,
           dataId,
           id,
           type,
-          all,
-        },
+          all
+        }
       });
     },
     handleCreate() {
       // type:{0:创建,1:上级主管审批,2:分管总监审批,3:总经理审批,4:销假,5:查看}
-      this.$router.push({ path: '/leaveform', query: { type: 0 } });
+      this.$router.push({ path: "/leaveform", query: { type: 0 } });
     },
     ...mapActions([
-      'getOperate',
-      'getLeavePendData',
-      'getLeaveFinishedData',
-      'getLeaveEndData',
-      'getLeaveCancelData',
-      'getLeaveStopData',
-    ]),
+      "getOperate",
+      "getLeavePendData",
+      "getLeaveFinishedData",
+      "getLeaveEndData",
+      "getLeaveCancelData",
+      "getLeaveStopData"
+    ])
   },
   computed: {
     initialIndex() {
       let index = 0;
       index = findIndex(
         this.tabLabels,
-        item => item.label === this.selectedLabel,
+        item => item.label === this.selectedLabel
       );
       return index;
     },
@@ -265,14 +268,13 @@ export default {
       leaveFinishedData: state => state.apis.leaveFinishedData,
       leaveEndData: state => state.apis.leaveEndData,
       leaveCancelData: state => state.apis.leaveCancelData,
-      leaveStoppedData: state => state.apis.leaveStoppedData,
-    }),
+      leaveStoppedData: state => state.apis.leaveStoppedData
+    })
   },
   watch: {
     // 待处理
     leavePendingData(val = []) {
-      this.$nextTick(() => {
-        const pend = val.map((item) => {
+        const pend = val.map(item => {
           const obj = {};
           obj.nodeName = item.nodeName;
           obj.flowSummary = item.flowSummary;
@@ -282,95 +284,86 @@ export default {
           obj.all = item;
           obj.option = {
             name: item.flowSummary,
-            value: '',
-            arrowIcon: 'iconfont icon-input',
+            value: "",
+            arrowIcon: "iconfont icon-input"
           };
           return obj;
         });
         this.dataList.pend = pend;
-      });
     },
     // 已处理
     leaveFinishedData(val = []) {
-      this.$nextTick(() => {
-        const finished = val.map((item) => {
+        const finished = val.map(item => {
           const obj = {};
-          obj.nodeName = '查看';
+          obj.nodeName = "查看";
           obj.flowSummary = item.flowSummary;
           obj.dataId = item.dataId;
           obj.id = item.id;
           obj.formViewId = item.formViewId;
           obj.option = {
             name: item.flowSummary,
-            value: '',
-            arrowIcon: 'left',
+            value: "",
+            arrowIcon: "left"
           };
           return obj;
         });
         this.dataList.finished = finished;
-      });
     },
     // 已办结
     leaveEndData(val = []) {
-      this.$nextTick(() => {
-        const end = val.map((item) => {
+        const end = val.map(item => {
           const obj = {};
-          obj.nodeName = '查看';
+          obj.nodeName = "查看";
           obj.flowSummary = item.flowSummary;
           obj.dataId = item.dataId;
           obj.id = item.id;
           obj.formViewId = item.formViewId;
           obj.option = {
             name: item.flowSummary,
-            value: '',
-            arrowIcon: 'left',
+            value: "",
+            arrowIcon: "left"
           };
           return obj;
         });
         this.dataList.end = end;
-      });
     },
     // 已撤销
     leaveCancelData(val = []) {
-      this.$nextTick(() => {
-        const cancel = val.map((item) => {
+        const cancel = val.map(item => {
           const obj = {};
-          obj.nodeName = '查看';
+          obj.nodeName = "查看";
           obj.flowSummary = item.flowSummary;
           obj.dataId = item.dataId;
           obj.id = item.id;
           obj.formViewId = item.formViewId;
           obj.option = {
             name: item.flowSummary,
-            value: '',
-            arrowIcon: 'left',
+            value: "",
+            arrowIcon: "left"
           };
           return obj;
         });
         this.dataList.cancel = cancel;
-      });
     },
     // 已中止
     leaveStoppedData(val = []) {
-      this.$nextTick(() => {
-        const stop = val.map((item) => {
+        const stop = val.map(item => {
           const obj = {};
-          obj.nodeName = '查看';
+          obj.nodeName = "查看";
           obj.flowSummary = item.flowSummary;
           obj.dataId = item.dataId;
           obj.id = item.id;
           obj.formViewId = item.formViewId;
           obj.option = {
             name: item.flowSummary,
-            value: '',
-            arrowIcon: 'left',
+            value: "",
+            arrowIcon: "left"
           };
           return obj;
         });
         this.dataList.stop = stop;
-      });
-    },
-  },
+    }
+  }
 };
 </script>
 

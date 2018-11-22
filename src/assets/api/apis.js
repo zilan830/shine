@@ -1,9 +1,13 @@
-import request from './baseRequest';
+import baseRequest from './baseRequest';
 
 const apis = {};
 
+let requestMethod = baseRequest.request;
+
+
+
 // 登录
-apis.login = obj => request(obj, 'loginAction!loginAjax').then((res) => {
+apis.login = obj => requestMethod(obj, 'loginAction!loginAjax').then((res) => {
   if (res.success) {
     return res;
   }
@@ -12,127 +16,152 @@ apis.login = obj => request(obj, 'loginAction!loginAjax').then((res) => {
 });
 
 // 登出
-apis.signOut = obj => request(obj, 'loginAction!logoutAjax').then((res) => {
+apis.signOut = obj => requestMethod(obj, 'loginAction!logoutAjax').then((res) => {
   if (res.success) {
     return 'success';
   }
   const e = new Error('error');
-  throw e;
+  throw res;
 });
 
 // 请假列表 可删除
-apis.leaveList = obj => request(obj, 'leaveFlowAction!getTabsInfo').then((res) => {
-  console.log('leave', res);
+apis.leaveList = obj => requestMethod(obj, 'leaveFlowAction!getTabsInfo').then((res) => {
+  
   if (res.success) {
-    return 'success';
+    return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+
 });
 
 // 消息列表
-apis.getNews = obj => request(obj, 'leaveFlowAction!getMyPendingTasks').then((res) => {
-  if (res.data) {
-    return res.data;
-  }
-  const e = new Error('error');
-  throw e;
-});
+apis.getNews = () => requestMethod({}, 'leaveFlowAction!getMyPendingTasks').then((res) => {
 
-// 请假权限
-apis.getOperate = () => request({}, 'leaveFlowAction!getTabsInfo').then((res) => {
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+});
+
+// 请假权限
+apis.getOperate = () => requestMethod({}, 'leaveFlowAction!getTabsInfo').then((res) => {
+
+  if (res.success) {
+    return res.data;
+  }
+  const e = new Error('error');
+  throw res;
+
 });
 
 // 请假数据
 // pending-待处理；
-apis.getPendingLeaveData = () => request({ instType: 'pending' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+apis.getPendingLeaveData = () => requestMethod({ instType: 'pending' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
+
 });
 // finished-已处理；
-apis.getFinishedLeaveData = () => request({ instType: 'finished' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+apis.getFinishedLeaveData = () => requestMethod({ instType: 'finished' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+ 
 });
 // end-已办结；
-apis.getEndLeaveData = () => request({ instType: 'end' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+apis.getEndLeaveData = () => requestMethod({ instType: 'end' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+
 });
 // cancel-已撤销；
-apis.getCancelLeaveData = () => request({ instType: 'cancel' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+apis.getCancelLeaveData = () => requestMethod({ instType: 'cancel' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 // stopped-已中止
-apis.getStopLeaveData = () => request({ instType: 'stopped' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+apis.getStopLeaveData = () => requestMethod({ instType: 'stopped' }, 'leaveFlowAction!getFlowInstInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 
 // 获取请假表单数据
-apis.getFormLeaveData = obj => request(obj, 'leaveFlowAction!getFlowInstDataInfo').then((res) => {
+apis.getFormLeaveData = obj => requestMethod(obj, 'leaveFlowAction!getFlowInstDataInfo').then((res) => {
+  
   if (res.success) {
     return res.data;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 
 // 获取数据字典
-apis.getDataDictionary = () => request({}, 'leaveFlowAction!getSysData').then((res) => {
+apis.getDataDictionary = () => requestMethod({}, 'leaveFlowAction!getSysData').then((res) => {
+  
   if (res.success) {
     return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 
 // 请假保存
-apis.getLeaveSave = obj => request({ ...obj }, 'leaveFlowAction!save').then((res) => {
+apis.getLeaveSave = obj => requestMethod({ ...obj }, 'leaveFlowAction!save').then((res) => {
+ 
   if (res.success) {
     return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+ 
 });
 
 // 获取下一步节点信息
-apis.getNextStepInfo = obj => request({ ...obj }, 'leaveFlowAction!nexStepInfo').then((res) => {
+apis.getNextStepInfo = obj => requestMethod({ ...obj }, 'leaveFlowAction!nexStepInfo').then((res) => {
+  
   if (res.success) {
     return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 
 // 下一个流程流转
-apis.getNextSave = obj => request({ ...obj }, 'leaveFlowAction!nextSave').then((res) => {
+apis.getNextSave = obj => requestMethod({ ...obj }, 'leaveFlowAction!nextSave').then((res) => {
+  
   if (res.success) {
     return res;
   }
   const e = new Error('error');
-  throw e;
+  throw res;
+  
 });
 
 

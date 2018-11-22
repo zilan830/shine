@@ -6,8 +6,8 @@
             :key="index"
             :option="item.option"
             v-on="{click:()=>handleItemClick(item.type)}"></hx-cell>
-            <div v-if="newsList.length === 0" class="empty-tips">暂无请假信息</div>
     </div>
+    <div v-if="newsList.length === 0" class="empty-tips">暂无消息</div>
   </div>
 </template>
 

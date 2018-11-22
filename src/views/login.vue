@@ -5,13 +5,13 @@
         :model="model"
         :schema="schema"
         :options="options"
-        @submit="submitHandler">
+        @submit.prevent="submitHandler">
     </cube-form>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import backgroundImg from "../assets/image/2.png";
 
 export default {
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       model: {
-        userName: "周伟",
+        userName: "李馥亦",
         password: "11111111",
         backgroundImg
       },
@@ -80,20 +80,19 @@ export default {
   },
   methods: {
     submitHandler() {
-      window.event
-        ? (window.event.cancelBubble = true)
-        : event.stopPropagation();
-      window.event ? (window.event.returnValue = false) : e.preventDefault();
+       
       const data = {
         "sysUser.userAccout": this.model.userName,
         "sysUser.userPwd": this.model.password
       };
+
       this.login({ data, router: this.$router });
       this.getDataDictionary();
     },
     ...mapActions(["login", "getDataDictionary"])
-  }
+  },
 };
+
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -105,13 +104,11 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 .login {
   width: 100%;
   height: 100%;
-  position: relative;
   background: url('./../assets/image/2.png') no-repeat bottom / cover;
 
   .title {
     width: 100%;
-    position: absolute;
-    top: 18vh;
+    line-height: 30vh;
     font-size: 30px;
     text-align: center;
     letter-spacing: 10px;
@@ -119,9 +116,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   }
 
   .cube-form {
-    position: absolute;
     width: 100%;
-    top: 30vh;
     background-color: transparent;
 
     .cube-form-group-content {

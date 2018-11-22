@@ -51,12 +51,25 @@ export default {
         toIndex: to.meta.index,
       });
       this.changeHeaderName(to.meta.index);
-      // this.jumpLogin();
+      
     },
   },
   mounted() {
     this.changeHeaderName(this.$route.meta.index);
-    // this.jumpLogin();
+    window.addEventListener(
+      "onorientationchange" in window ? "orientationchange" : "resize",
+      () => {
+        if (window.orientation === 90 || window.orientation === -90) {
+            //想把下面的alert换成能够控制v-show的代码
+            console.log("!!!")
+          alert("横屏可能导致页面异常，建议竖屏操作！"
+          ); // 这里用 this 作用域就不对了.
+          //alert("123");仅alert纯文本可以正常运行
+        }
+        //window.location.reload();
+      },
+      false
+      );
   },
   methods: {
     ...mapActions(['transitionStyle']),
@@ -176,4 +189,14 @@ export default {
   width: 100%;
   // top: 46px;
 }
+
+.footerContainer{
+  .cube-tab-bar{
+    .cube-tab{
+      >i{
+        font-size: 30px
+      }
+      }
+    }
+  }
 </style>

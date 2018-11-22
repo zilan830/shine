@@ -1,4 +1,4 @@
-function findIndex(ary, fn) {
+const findIndex = (ary, fn) =>{
   if (ary.findIndex) {
     return ary.findIndex(fn);
   }
@@ -16,4 +16,7 @@ function findIndex(ary, fn) {
   return index;
 }
 
-export { findIndex };
+const isAndroid = window.android ? window.android.isAndroid() : false;
+
+
+export { findIndex, isAndroid };

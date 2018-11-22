@@ -460,6 +460,7 @@ export default {
         this.model[i] = this.dataSource[i];
       });
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
       });
@@ -469,6 +470,7 @@ export default {
           && item.modelKey !== 'sjzgspyj'
           && item.modelKey !== 'sjzgsprq'
         ) {
+          items.type='input';
           item.props.disabled = true;
           item.rules.required = false;
           item.props.placeholder = '';
@@ -489,11 +491,13 @@ export default {
       });
       console.log('this.model', this.model);
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
       });
       this.approveColumn.fields.forEach(item => {
         if (item.modelKey !== 'bmjlspyj' && item.modelKey !== 'bmjlsprq') {
+          item.type='input';
           item.props.disabled = true;
           item.rules.required = false;
           item.props.placeholder = '';
@@ -512,12 +516,14 @@ export default {
         this.model[i] = this.dataSource[i];
       });
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
       });
       this.approveColumn.fields.forEach(item => {
         if (item.modelKey !== 'bmjlspyj' && item.modelKey !== 'bmjlsprq') {
+          item.type='input';
           item.props.disabled = true;
           item.rules.required = false;
           item.props.placeholder = '';
@@ -536,11 +542,13 @@ export default {
         this.model[i] = this.dataSource[i];
       });
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
       });
       this.approveColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
@@ -558,11 +566,13 @@ export default {
         this.model[i] = this.dataSource[i];
       });
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
       });
       this.approveColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
@@ -581,16 +591,19 @@ export default {
         this.model[i] = this.dataSource[i];
       });
       this.baseColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
       });
       this.approveColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
       });
       this.saleColumn.fields.forEach(item => {
+        item.type='input';
         item.props.disabled = true;
         item.rules.required = false;
         item.props.placeholder = '';
@@ -811,7 +824,6 @@ export default {
       const { type } = this.type;
       const { id, flowSummary } = this.saveDatas;
       if (val.nodeName === '结束') {
-        console.log('jieshu')
         delete val.actorUserId;
         delete val.actorUserName;
         delete val.allActorUsers;
