@@ -437,7 +437,6 @@ export default {
   created() {
     const { type } = this.$route.query;
     this.type = parseInt(type, 10);
-    console.log('type', typeof this.type);
     if (this.type !== 0) {
       this.getFormData();
     } else {
@@ -485,11 +484,9 @@ export default {
     // 分管总监审批
     getMange() {
       this.model = { ...this.baseInfo, ...this.approveInfo };
-      console.log('this.dataSource', this.dataSource);
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      console.log('this.model', this.model);
       this.baseColumn.fields.forEach(item => {
         item.type='input';
         item.props.disabled = true;
@@ -684,10 +681,8 @@ export default {
     handleSaveData(param, keyLists) {
       param['conditionMap.fields'] = `${keyLists.join()},id`;
       keyLists.forEach(item => {
-        console.log('item', item);
         param[`conditionMap.${item}`] = this.model[item] || '';
       });
-      console.log('param', param);
       return param;
     },
     validateHandler(result) {
@@ -765,28 +760,10 @@ export default {
       }
     },
     saveData(val) {
-      console.log('val', val);
       const { id, flowSummary } = val;
       this.saveDatas = val;
       const { all } = this.$route.query;
       const { type } = this;
-
-      console.log('type', typeof type);
-      // if (type === 0) {
-      //   console.log("zhege")
-      //   const param = {
-      //     "conditionMap.flowInstId": id,
-      //     "conditionMap.complateType": "draft"
-      //   };
-      //   this.getNextInfo({ param });
-      // } else {
-      //   const param = {
-      //     "conditionMap.flowInstId": all.flowInstId,
-      //     "conditionMap.complateType": "pending",
-      //     "conditionMap.nodeId": id
-      //   };
-      //   this.getNextInfo({ param });
-      // }
       if (type === 0) {
         // 草稿状态跳转到下一步
         this.$router.push({
@@ -819,7 +796,6 @@ export default {
       }
     },
     nextStepInfo(val) {
-      console.log('nextStepInfoval', val)
       const { all } = this.$route.query;
       const { type } = this.type;
       const { id, flowSummary } = this.saveDatas;

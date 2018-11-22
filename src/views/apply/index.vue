@@ -9,10 +9,10 @@
         <div class="apply-hot-key">
           <p @click="createEvents">创建</p>
           <p @click="item.dealEvents">待处理
-            <!-- <span>{{item.dealNum}}</span> -->
+            <span>{{leavePendingData}}</span>
             </p>
           <p @click="item.endEvents">已完结
-             <!-- <span>{{item.endNum}}</span> -->
+             <span>{{leaveEndData}}</span>
              </p>
         </div>
       </li>
@@ -21,37 +21,56 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 
 export default {
-  name: 'apply',
+  name: "apply",
   data() {
     return {
-      dealNum: 11,
-      endNum: 11,
+      dealNum: 0,
+      endNum: 0,
       dataList: [
         {
-          id: '1',
-          icon: 'icon-leave',
-          title: '请 假',
+          id: "1",
+          icon: "icon-leave",
+          title: "请 假",
           dealNum: 11,
           endNum: 10,
-          events: () => this.handleApply('1', '待处理'),
-          dealEvents: () => this.handleApply('1', '待处理'),
-          endEvents: () => this.handleApply('1', '已办结'),
-        },
-      ],
+          events: () => this.handleApply("1", "待处理"),
+          dealEvents: () => this.handleApply("1", "待处理"),
+          endEvents: () => this.handleApply("1", "已办结")
+        }
+      ]
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // 获取请假数据
+      this.getLeavePendData();
+      this.getLeaveEndData();
+    });
   },
   methods: {
     handleApply(index, type) {
-      console.log('index', index, type);
+      console.log("index", index, type);
 
       // 路由参数
-      this.$router.push({ path: '/leave', query: { type } });
+      this.$router.push({ path: "/leave", query: { type } });
     },
     createEvents() {
-      this.$router.push({ path: '/leaveform', query: { type: 0 } });
+      this.$router.push({ path: "/leaveform", query: { type: 0 } });
     },
+    ...mapActions(["getLeavePendData", "getLeaveEndData",])
+  },
+  computed: {
+    ...mapState({
+      leavePendingData: state => {
+        return state.apis.leavePendingData.length
+        },
+      leaveEndData: state => {
+       return state.apis.leaveEndData.length
+        }
+    })
   },
 };
 </script>

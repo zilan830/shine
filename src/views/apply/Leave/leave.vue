@@ -255,7 +255,8 @@ export default {
   },
   computed: {
     initialIndex() {
-      let index = 0;
+      const { type } = this.$route.query;
+      let index = type === '已办结' ? 2: 0;
       index = findIndex(
         this.tabLabels,
         item => item.label === this.selectedLabel
