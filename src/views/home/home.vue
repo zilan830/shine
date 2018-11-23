@@ -123,13 +123,12 @@ export default {
           if(val.length === 0){
               this.hasTask = false;
           }else{
-              val.forEach(item => {
-                  if(item.type === 'flow'){
+              for(const item of val){
+                   if(item.type === 'flow'){
                       this.hasTask = true;
-                  }else{
-                      this.hasTask = false;
+                      break;
                   }
-              });
+              }
           }
       }
   }

@@ -452,17 +452,29 @@ export default {
       ).userName;
       this.schema.groups.push(this.baseColumn, this.buttonColumn);
     },
+    handleBaseColumn(){
+      this.baseColumn.fields.forEach(item => {
+        if(item.type !== 'textarea'){
+          item.type='input';
+        }
+        item.props.disabled = true;
+        item.rules.required = false;
+        item.props.placeholder = '';
+      });
+    },
     // 上级主管审批
     getApprove() {
       this.model = { ...this.baseInfo, ...this.approveInfo };
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-      });
+      this.handleBaseColumn();
+      // this.baseColumn.fields.forEach(item => {
+      //   item.type='input';
+      //   item.props.disabled = true;
+      //   item.rules.required = false;
+      //   item.props.placeholder = '';
+      // });
       this.approveColumn.fields.forEach(item => {
         if (
           item.modelKey !== 'spzjyj'
@@ -487,11 +499,7 @@ export default {
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-      });
+      this.handleBaseColumn();
       this.approveColumn.fields.forEach(item => {
         if (item.modelKey !== 'bmjlspyj' && item.modelKey !== 'bmjlsprq') {
           item.type='input';
@@ -512,12 +520,7 @@ export default {
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-        item.props.placeholder = '';
-      });
+      this.handleBaseColumn();
       this.approveColumn.fields.forEach(item => {
         if (item.modelKey !== 'bmjlspyj' && item.modelKey !== 'bmjlsprq') {
           item.type='input';
@@ -538,12 +541,7 @@ export default {
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-        item.props.placeholder = '';
-      });
+      this.handleBaseColumn();
       this.approveColumn.fields.forEach(item => {
         item.type='input';
         item.props.disabled = true;
@@ -562,12 +560,7 @@ export default {
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-        item.props.placeholder = '';
-      });
+      this.handleBaseColumn();
       this.approveColumn.fields.forEach(item => {
         item.type='input';
         item.props.disabled = true;
@@ -587,12 +580,7 @@ export default {
       Object.keys(this.dataSource).forEach(i => {
         this.model[i] = this.dataSource[i];
       });
-      this.baseColumn.fields.forEach(item => {
-        item.type='input';
-        item.props.disabled = true;
-        item.rules.required = false;
-        item.props.placeholder = '';
-      });
+      this.handleBaseColumn();
       this.approveColumn.fields.forEach(item => {
         item.type='input';
         item.props.disabled = true;
@@ -817,3 +805,18 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus" rel="stylesheet/stylus">
+@require '~cube-ui/src/common/stylus/variable.styl';
+@require '../../../theme.styl';
+
+.form-container{
+  .cube-form_standard .cube-textarea-wrapper{
+      height:100%
+    }
+    // .cube-form_standard .cube-form-label{
+    //   font-size: 14px
+    // }
+}
+
+</style>

@@ -11,7 +11,7 @@
           <p @click="item.dealEvents">待处理
             <span>{{leavePendingData}}</span>
             </p>
-          <p @click="item.endEvents">已完结
+          <p @click="item.endEvents">已办结
              <span>{{leaveEndData}}</span>
              </p>
         </div>

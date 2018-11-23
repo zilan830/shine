@@ -171,10 +171,9 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.type) {
       const { type } = this.$route.query;
-      this.selectedLabel = type;
-    }
+      this.isHide = type ? true : false;
+      this.selectedLabel = type ? type : '待处理';
   },
   mounted() {
     this.$nextTick(() => {

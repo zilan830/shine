@@ -73,7 +73,7 @@ export default {
     handlerBack() {
       switch (this.$route.name) {
         case "nextapprove":
-          this.$router.push("/leave");
+          this.$router.push({ path: "/leave", query: { type:"待处理" } });
           break;
         case "leave":
           this.$router.push("/apply");
@@ -188,7 +188,11 @@ export default {
   .cube-tab-bar {
     .cube-tab {
       >i {
-        font-size: 30px;
+        font-size: 25px;
+      }
+      >div{
+        font-size: 12px
+        letter-spacing:2px
       }
     }
   }
