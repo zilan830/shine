@@ -1,8 +1,9 @@
 <template>
   <div class="mine">
     <div class="brief-container">
-        <div class="avatar-container">头像</div>
+        <!-- <div class="avatar-container">头像</div> -->
         <p class="name">{{name}}</p>
+        <h1>你是要和我说再见了吗？</h1>
         <!-- <p class="position">移动组-组员</p> -->
     </div>
     <div class="operate-container">
@@ -73,7 +74,7 @@ export default {
   flex-direction: column;
 
   .brief-container {
-    background-color: $color-orange;
+    background-color: teal;
     height: 250px;
     color: white;
     text-align: center;

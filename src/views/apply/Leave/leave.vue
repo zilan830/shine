@@ -392,8 +392,7 @@ export default {
     opacity:1;
     transition:all 0.3s
     &.hide {
-      top:0;
-      opacity : 0;
+      //top:0;
       transition:all 0.3s
     }
   }

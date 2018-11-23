@@ -89,7 +89,7 @@ export default {
       height: 50px;
       padding: 10px;
       margin-bottom: 10px;
-      border: 1px solid $color-orange;
+      border: 1px solid teal;
       border-radius: 3px;
 
       .apply-icon {
@@ -107,7 +107,7 @@ export default {
         }
 
         >i {
-          color: $color-orange;
+          color: teal;
           font-size: 50px;
         }
       }
@@ -117,7 +117,7 @@ export default {
         display: flex;
 
         >p {
-          border-left: 1px solid $color-orange;
+          border-left: 1px solid teal;
           flex: 1;
           background-color: white;
           height: 100%;

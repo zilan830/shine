@@ -15,8 +15,8 @@ axios.defaults.withCredentials = true; // 请求时携带cookie信息,避免sess
 baseRequest.request = (data, url, type = 'POST', timeout = 10000) => {
   const options = {
     data:data,
-    url:`http://oa1.workmanage.cn:8899/oa/${url}`,
-    //url:`http://172.16.0.125:8086/${url}`,
+    //url:`http://oa1.workmanage.cn:8899/oa/${url}`,
+    url:`http://172.16.0.125:8086/${url}`,
     method: type,
     timeout,
   };

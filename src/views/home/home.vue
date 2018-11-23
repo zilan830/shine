@@ -1,13 +1,15 @@
 <template>
   <div class="home">
     <div class="header-container">
-        <div class="left-container">
+        <!-- <div class="left-container">
             <div class="img-container">
                 头像
             </div>
-        </div>
+        </div> -->
         <div class="right-container">
             <p>{{name}}</p>
+            <h1 v-if="!hasTask">你好，今天暂未有事项需要处理哦</h1>
+            <h1 v-if="hasTask">你好，今天有待办事项需要你处理哦</h1>
             <!-- <p>{{`${department}-${position}`}}</p> -->
         </div>
     </div>
@@ -63,6 +65,7 @@ export default {
       name: '',
       department: '移动平台',
       position: '组员',
+      hasTask:false
     };
   },
   mounted() {
@@ -71,7 +74,7 @@ export default {
   },
   methods: {
     handleApply(router) {
-      this.$router.push(router);
+      this.$router.push({ path: "/leave", query: { type:"待处理" } });
     },
     getUserInfo() {
       const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
@@ -115,6 +118,21 @@ export default {
       },
     }),
   },
+  watch:{
+      newsList(val){
+          if(val.length === 0){
+              this.hasTask = false;
+          }else{
+              val.forEach(item => {
+                  if(item.type === 'flow'){
+                      this.hasTask = true;
+                  }else{
+                      this.hasTask = false;
+                  }
+              });
+          }
+      }
+  }
 };
 </script>
 
@@ -130,7 +148,7 @@ export default {
     .header-container {
         display: flex;
         height: 100px;
-        background-color: $color-orange;
+        background-color: teal;
 
         .left-container {
             width: 100px;
@@ -184,7 +202,7 @@ export default {
                 .reatangle {
                     width: 5px;
                     height: 16px;
-                    background-color: $color-orange;
+                    background-color: teal;
                 }
 
                 .item-text {
@@ -205,12 +223,11 @@ export default {
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
-                // background-color: $color-orange;
                 border-radius: 5px;
 
                 >i {
                     font-size: 40px;
-                    color: $color-orange;
+                    color: teal;
                 }
 
                 &:active {
